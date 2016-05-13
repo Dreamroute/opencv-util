@@ -60,6 +60,9 @@ public class OpenCVLib {
 	 * @see com.changhong.csc.bill.RectModel
 	 */
 	public ArrayList<BufferedImage> cut(String path, ArrayList<RectModel> rectList) {
+		if(rectList == null || rectList.size() == 0) {
+			return null;
+		}
 		loadImage(path);
 		if(image == null) {
 //			new Dialog1(this, "请先加载图片。").jd.setVisible(true);

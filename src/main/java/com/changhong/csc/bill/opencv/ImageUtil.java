@@ -155,19 +155,32 @@ public class ImageUtil {
 	
 	public static Mat toMat(BufferedImage image) {
 		try {
-		final byte[] targetPixels = ((DataBufferByte) image.getRaster()
-				.getDataBuffer()).getData();
-		Mat m;
-		int type = image.getType();
-		if(type == BufferedImage.TYPE_BYTE_GRAY) {
-			m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
-		} else if(type == BufferedImage.TYPE_3BYTE_BGR) {
-			m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-		} else {
-			m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC4);
-		}
-		m.put(0, 0, targetPixels); // put all the pixels to mat
-		return m;
+			byte[] targetPixels = ((DataBufferByte) image.getRaster()
+					.getDataBuffer()).getData();
+			Mat m;
+			int type = image.getType();
+			if(type == BufferedImage.TYPE_BYTE_GRAY) {
+				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+			} else if(type == BufferedImage.TYPE_3BYTE_BGR) {
+				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+			} else if(type == BufferedImage.TYPE_4BYTE_ABGR) {
+				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+				//提取rgb通道数据，丢弃alpha通道数据，因为opencv有些接口只支持rgb3通道图像
+				int bufferSize = 3 * m.cols() * m.rows();
+				byte[] b = new byte[bufferSize];
+				for(int i = 0, j = 0, n = 0, len = targetPixels.length; i < len; i++) {
+					n = i % 4;
+					if(n != 0) {
+						b[j] = targetPixels[i];
+						j++;
+					}
+				}
+				targetPixels = b;
+			} else {
+				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+			}
+			m.put(0, 0, targetPixels); // put all the pixels to mat
+			return m;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
