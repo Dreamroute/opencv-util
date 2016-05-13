@@ -36,6 +36,9 @@ public class OpenCVLib {
 	public ArrayList<RectModel> getInfo(String path) {
 		loadImage(path);
 		ArrayList<RotatedRect> rectList = cutAndDeskewImage();
+		if(rectList == null) {
+			return null;
+		}
 		ArrayList<RectModel> resultList = new ArrayList<RectModel>(0);
 		for(int i = 0, len = rectList.size(); i < len; i++) {
 			RotatedRect rect = rectList.get(i);
