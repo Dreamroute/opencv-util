@@ -26,4 +26,14 @@ public class RotateImageModel {
 	public void setRotation(double rotation) {
 		this.rotation = rotation;
 	}
+	
+	@Override
+    public String toString() {
+        return new StringBuilder().
+                append("{").
+                append("name:").append(this.name).append(",").
+                append("rotation:").append(this.rotation).
+                append("}").toString();
+    }
+	
 }
