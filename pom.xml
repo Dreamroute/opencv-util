@@ -3,7 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.changhong.csc</groupId>
 	<artifactId>opencv-util</artifactId>
-	<version>2.1.0.RELEASE</version>
+	<version>2.2.0.RELEASE</version>
+	<description>2.2.0版本在2.1.0版本基础之上，修改了图片解码器，由原来的JDK解码器改为OenCV自带解码器</description>
 	<dependencies>
 		<dependency>
 			<groupId>com.changhong.csc</groupId>
