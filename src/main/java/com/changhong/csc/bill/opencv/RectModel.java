@@ -74,4 +74,15 @@ public class RectModel {
 	public void setRightAngel(double rightAngel) {
 		this.rightAngel = rightAngel;
 	}
+	
+	@Override
+	public String toString() {
+	    return new StringBuilder().
+	            append("x:").append(this.x).append(",").
+        	    append("y:").append(this.y).append(",").
+        	    append("width:").append(this.width).append(",").
+        	    append("height:").append(this.height).append(",").
+        	    append("rotation:").append(this.rotation).append(",").
+        	    append("rightAngel:").append(this.rightAngel).toString();
+	}
 }

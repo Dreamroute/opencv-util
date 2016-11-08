@@ -3,6 +3,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class ImageUtil {
@@ -153,36 +155,64 @@ public class ImageUtil {
 		return image;
 	}
 	
-	public static Mat toMat(BufferedImage image) {
+	public static Mat toMat(InputStream is) {
+	    ByteArrayOutputStream os = null;
+	    Mat imageMat = null;
 		try {
-			byte[] targetPixels = ((DataBufferByte) image.getRaster()
-					.getDataBuffer()).getData();
-			Mat m;
-			int type = image.getType();
-			if(type == BufferedImage.TYPE_BYTE_GRAY) {
-				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
-			} else if(type == BufferedImage.TYPE_3BYTE_BGR) {
-				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-			} else if(type == BufferedImage.TYPE_4BYTE_ABGR) {
-				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-				//提取rgb通道数据，丢弃alpha通道数据，因为opencv有些接口只支持rgb3通道图像
-				int bufferSize = 3 * m.cols() * m.rows();
-				byte[] b = new byte[bufferSize];
-				for(int i = 0, j = 0, n = 0, len = targetPixels.length; i < len; i++) {
-					n = i % 4;
-					if(n != 0) {
-						b[j] = targetPixels[i];
-						j++;
-					}
-				}
-				targetPixels = b;
-			} else {
-				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-			}
-			m.put(0, 0, targetPixels); // put all the pixels to mat
-			return m;
+		    os = new ByteArrayOutputStream(is.available());
+		    byte[] buffer = new byte[1024];
+		    int bytesRead;
+		    while ((bytesRead = is.read(buffer)) != -1) {
+		        os.write(buffer, 0, bytesRead);
+		    }
+
+		    imageMat = new Mat(1, os.size(), CvType.CV_8U);
+		    imageMat.put(0, 0, os.toByteArray());
+		    Mat decoded = Imgcodecs.imdecode(imageMat, Imgcodecs.IMREAD_COLOR);
+		    return decoded;
+		    
+//			byte[] targetPixels = ((DataBufferByte) image.getRaster()
+//					.getDataBuffer()).getData();
+//			Mat m;
+//			int type = image.getType();
+//			if(type == BufferedImage.TYPE_BYTE_GRAY) {
+//				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC1);
+//			} else if(type == BufferedImage.TYPE_3BYTE_BGR) {
+//				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+//			} else if(type == BufferedImage.TYPE_4BYTE_ABGR) {
+//				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+//				//提取rgb通道数据，丢弃alpha通道数据，因为opencv有些接口只支持rgb3通道图像
+//				int bufferSize = 3 * m.cols() * m.rows();
+//				byte[] b = new byte[bufferSize];
+//				for(int i = 0, j = 0, n = 0, len = targetPixels.length; i < len; i++) {
+//					n = i % 4;
+//					if(n != 0) {
+//						b[j] = targetPixels[i];
+//						j++;
+//					}
+//				}
+//				targetPixels = b;
+//			} else {
+//				m = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+//			}
+//			m.put(0, 0, targetPixels); // put all the pixels to mat
+//			return m;
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+		    try {
+		        if(is != null) {
+	                is.close();
+	            }
+	            if(os != null) {
+	                os.close();
+	            }
+	            if(imageMat != null) {
+	                imageMat.release();
+	            }
+		    } catch (Exception e) {
+	            e.printStackTrace();
+	        } 
 		}
 		return null;
 	}

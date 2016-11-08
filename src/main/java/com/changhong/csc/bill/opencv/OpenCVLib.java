@@ -1,12 +1,9 @@
 package com.changhong.csc.bill.opencv;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -24,6 +21,7 @@ public class OpenCVLib {
 	static {
 //		System.load("/opt/opencv/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so");
 		System.load("/myfolder/opencv_tools/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so");
+//		System.load("D:/work_soft/opencv/build/java/x64/opencv_java300.dll");
 	}
 	
 	/**
@@ -39,9 +37,8 @@ public class OpenCVLib {
 		if(rectList == null) {
 			return null;
 		}
-		ArrayList<RectModel> resultList = new ArrayList<RectModel>(0);
-		for(int i = 0, len = rectList.size(); i < len; i++) {
-			RotatedRect rect = rectList.get(i);
+		ArrayList<RectModel> resultList = new ArrayList<RectModel>(rectList.size());
+		for(RotatedRect rect : rectList) {
 			RectModel model = new RectModel();
 			model.setWidth(rect.size.width);
 			model.setHeight(rect.size.height);
@@ -68,7 +65,6 @@ public class OpenCVLib {
 		}
 		loadImage(path);
 		if(image == null) {
-//			new Dialog1(this, "请先加载图片。").jd.setVisible(true);
 			return null;
 		}
 		return cutLib.cutImages(image.clone(), rectList);
@@ -78,15 +74,14 @@ public class OpenCVLib {
 		boolean isSuccessful = false;
 		try {
 			isSuccessful = cutLib.rotateImages(imageList);
-			return isSuccessful;
 		} catch(Exception e) {
-			return isSuccessful;
+		    e.printStackTrace();
 		}
+		return isSuccessful;
 	}
 	
 	private ArrayList<RotatedRect> cutAndDeskewImage() {
 		if(image == null) {
-//			new Dialog1(this, "请先加载图片。").jd.setVisible(true);
 			return null;
 		}
 		return cutLib.edgeDetect(image.clone());
@@ -103,6 +98,8 @@ public class OpenCVLib {
 	}
 	
 	private Mat loadRemoteImage(String spec) {
+	    Mat m = null;
+	    InputStream inStream = null;
 		try {
 			// new一个URL对象
 			URL url = new URL(spec);
@@ -113,14 +110,21 @@ public class OpenCVLib {
 			// 超时响应时间为5秒
 			conn.setConnectTimeout(5 * 1000);
 			// 通过输入流获取图片数据
-			InputStream inStream = conn.getInputStream();
-			BufferedImage image = ImageIO.read(inStream);
-			Mat m = ImageUtil.toMat(image);
-			return m;
-		} catch (IOException e) {
-//			new Dialog1(this, "加载远程图片失败。").jd.setVisible(true);
-			return null;
+			inStream = conn.getInputStream();
+			//转换inputStream为matrix，并且解码图片
+			m = ImageUtil.toMat(inStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		    if(inStream != null) {
+		        try {
+		            inStream.close();
+		        } catch(Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
 		}
+		return m;
 	}
 	
 //	private byte[] readInputStream(InputStream inStream) throws Exception {

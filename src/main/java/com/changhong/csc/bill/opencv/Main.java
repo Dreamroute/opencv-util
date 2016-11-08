@@ -22,15 +22,17 @@ public class Main {
 	}
 
 	private static void m1() {
-		String path = "http://10.4.68.7:9999/group1/M00/00/13/CgREB1cxcBWAatMwAAD-qyPJP1I013.jpg";
-		System.out.println("================www================");
-		System.out.println(System.getProperty("java.library.path"));
-		System.out.println("================www================");
+		String path = "http://10.4.68.7:9999/group1/M00/00/52/CgREB1ggHXGAegoJAAGtkX17jZE290.png";
+//		String path = "C:\\Users\\p'c\\Desktop\\CgREB1ggHXGAegoJAAGtkX17jZE290.png";
+//		System.out.println("================www================");
+//		System.out.println(System.getProperty("java.library.path"));
+//		System.out.println("================www================");
 		OpenCVLib lib = new OpenCVLib();
 		System.out.println("OenCVLib初始化。。。");
 		ArrayList<RectModel> info = lib.getInfo(path);
+		System.out.println(info);
 		ArrayList<BufferedImage> imageList = lib.cut(path, info);
-		System.err.println(imageList);
+		System.out.println(imageList);
 	}
 
 }
