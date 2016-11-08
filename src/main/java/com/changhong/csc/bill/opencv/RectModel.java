@@ -78,11 +78,13 @@ public class RectModel {
 	@Override
 	public String toString() {
 	    return new StringBuilder().
+	            append("{").
 	            append("x:").append(this.x).append(",").
         	    append("y:").append(this.y).append(",").
         	    append("width:").append(this.width).append(",").
         	    append("height:").append(this.height).append(",").
         	    append("rotation:").append(this.rotation).append(",").
-        	    append("rightAngel:").append(this.rightAngel).toString();
+        	    append("rightAngel:").append(this.rightAngel).
+        	    append("}").toString();
 	}
 }
