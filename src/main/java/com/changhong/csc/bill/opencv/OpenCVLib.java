@@ -14,14 +14,19 @@ public class OpenCVLib {
 	private CutImageForLib cutLib = new CutImageForLib();
 	private Mat image;
 	
-	public OpenCVLib() {
-//		System.load("/opt/opencv/opencv-3.0.0/lib/libopencv_java300.so");
-	}
+	public OpenCVLib() {}
 	
 	static {
-//		System.load("/opt/opencv/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so");
-		System.load("/myfolder/opencv_tools/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so");
-//		System.load("D:/work_soft/opencv/build/java/x64/opencv_java300.dll");
+		String loadContent = Main.LINUX;
+		String osName = System.getProperty("os.name");
+		if(null != osName && osName.trim().length() > 0) {
+			if(osName.toLowerCase().startsWith("windows")) {
+				loadContent = Main.WINDOWS;
+			}
+		}
+		System.load(loadContent);
+		System.err.println("此系统是：" + osName);
+		System.err.println("加载本地文件：" + loadContent);
 	}
 	
 	/**
