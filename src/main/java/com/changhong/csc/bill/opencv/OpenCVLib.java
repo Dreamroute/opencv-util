@@ -11,17 +11,21 @@ import org.opencv.core.RotatedRect;
 import org.opencv.imgcodecs.Imgcodecs;
 
 public class OpenCVLib {
+	
+	public static final String LINUX = "/myfolder/opencv_tools/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so";
+	public static final String WINDOWS = "D:/opencv/build/java/x64/opencv_java300.dll";
+	
 	private CutImageForLib cutLib = new CutImageForLib();
 	private Mat image;
 	
 	public OpenCVLib() {}
 	
 	static {
-		String loadContent = Main.LINUX;
+		String loadContent = LINUX;
 		String osName = System.getProperty("os.name");
 		if(null != osName && osName.trim().length() > 0) {
 			if(osName.toLowerCase().startsWith("windows")) {
-				loadContent = Main.WINDOWS;
+				loadContent = WINDOWS;
 			}
 		}
 		System.load(loadContent);

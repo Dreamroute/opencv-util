@@ -9,14 +9,11 @@ import java.util.ArrayList;
  * 		1、修改OpenCVLib对opencv本地文件的加载，Linux/Windows二选一，注释掉其中一个<br>
  * 		2、使用eclipse导出     Runnable JAR file     类型<br>
  * 
- * @author Administrator
+ * @author dehai.wang@changhong.com
  *
  */
 public class Main {
 	
-	public static final String LINUX = "/myfolder/opencv_tools/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so";
-	public static final String WINDOWS = "D:/opencv/build/java/x64/opencv_java300.dll";
-
 	public static void main(String[] args) {
 		m1();
 	}
