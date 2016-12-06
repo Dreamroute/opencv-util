@@ -14,6 +14,7 @@ public class OpenCVLib {
 	
 	public static final String LINUX = "/myfolder/opencv_tools/opencv-3.0.0/build/share/OpenCV/java/libopencv_java300.so";
 	public static final String WINDOWS = "D:/opencv/build/java/x64/opencv_java300.dll";
+	public static final String OS_NAME = "os.name";
 	
 	private CutImageForLib cutLib = new CutImageForLib();
 	private Mat image;
@@ -22,14 +23,14 @@ public class OpenCVLib {
 	
 	static {
 		String loadContent = LINUX;
-		String osName = System.getProperty("os.name");
+		String osName = System.getProperty(OS_NAME);
 		if(null != osName && osName.trim().length() > 0) {
 			if(osName.toLowerCase().startsWith("windows")) {
 				loadContent = WINDOWS;
 			}
 		}
 		System.load(loadContent);
-		System.err.println("此系统是：" + osName);
+		System.err.println("此操作系统为：" + osName);
 		System.err.println("加载本地文件：" + loadContent);
 	}
 	
